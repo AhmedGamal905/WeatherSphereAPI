@@ -9,16 +9,12 @@ use App\Services\WeatherService;
 
 class WeatherController extends Controller
 {
-    protected $weatherService;
-
-    public function __construct(WeatherService $weatherService)
-    {
-        $this->weatherService = $weatherService;
-    }
     public function fetchWeatherData(Request $request)
     {
 
-        $response = $this->weatherService->fetchWeather($request);
+        $weatherService = new WeatherService();
+
+        $response = $weatherService->fetchWeather($request);
 
         if ($response->successful()) {
             return new WeatherResource($response->json());
