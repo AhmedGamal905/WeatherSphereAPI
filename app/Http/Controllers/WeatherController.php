@@ -4,27 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Http\Resources\WeatherResource;
+use App\Services\WeatherService;
 
 class WeatherController extends Controller
 {
+    protected $weatherService;
+
+    public function __construct(WeatherService $weatherService)
+    {
+        $this->weatherService = $weatherService;
+    }
     public function fetchWeatherData(Request $request)
     {
-        $response = Http::get('https://api.open-meteo.com/v1/forecast', [
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'hourly' => 'temperature_2m',
-            'forecast_days' => 1
-        ]);
 
-        if ($response->status() == 200) {
-            return $response->json();
+        $response = $this->weatherService->fetchWeather($request);
+
+        if ($response->successful()) {
+            return new WeatherResource($response->json());
+
         } else {
             return response()->json([
-                'reason' => $response->json()['reason'] ?? 'Error details unavailable',
+                'reason' => $response->json()['reason'] ?? 'Something Went Wrong',
             ]);
         }
-
-
     }
-
 }
