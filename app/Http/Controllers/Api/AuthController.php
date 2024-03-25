@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+
 
 
 class AuthController extends Controller
@@ -15,50 +16,41 @@ class AuthController extends Controller
     public function create(Request $request)
     {
 
-        $validateUser = Validator::make(
-            $request->all(),
-            [
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required'
-            ]
-        );
-
-        if ($validateUser->fails()) {
-            return response()->json($validateUser->errors(), 401);
-        }
+        $request->validate([
+            'name' => 'required',
+            'email' => ['required', 'unique:users', 'email'],
+            'password' => 'required'
+        ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => $request->password
         ]);
 
         return response()->json([
-            'status' => true,
-            'message' => 'User Created Successfully',
             'token' => $user->createToken("API TOKEN")->plainTextToken
-        ], 200);
+        ]);
     }
 
     public function login(Request $request)
     {
-        $loginUserData = $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|min:8'
+        $request->validate([
+            'email' => ['required', 'exists:users', 'email'],
+            'password' => 'required'
         ]);
 
-        $user = User::where('email', $loginUserData['email'])->first();
+        $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($loginUserData['password'], $user->password)) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'Invalid Credentials'
-            ], 401);
+            ]);
         }
-        $token = $user->createToken("API TOKEN")->plainTextToken;
+
         return response()->json([
-            'access_token' => $token,
-        ], 200);
+            'token' => $user->createToken("API TOKEN")->plainTextToken,
+        ]);
     }
 
 
