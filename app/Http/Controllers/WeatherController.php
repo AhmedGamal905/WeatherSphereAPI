@@ -9,20 +9,9 @@ use App\Services\WeatherService;
 
 class WeatherController extends Controller
 {
-    public function fetchWeatherData(Request $request)
+    public function fetchWeatherData(Request $request, WeatherService $weatherService)
     {
+        return $weatherService->fetch($request->latitude, $request->longitude);
 
-        $weatherService = new WeatherService();
-
-        $response = $weatherService->fetchWeather($request);
-
-        if ($response->successful()) {
-            return new WeatherResource($response->json());
-
-        } else {
-            return response()->json([
-                'reason' => $response->json()['reason'] ?? 'Something Went Wrong',
-            ]);
-        }
     }
 }

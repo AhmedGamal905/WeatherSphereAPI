@@ -2,20 +2,24 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Http\Resources\WeatherResource;
 
 class WeatherService
 {
-    protected $weatherApi = 'https://api.open-meteo.com/v1/forecast';
-
-    public function fetchWeather(Request $request)
+    public function fetch(float $latitude, float $longitude)
     {
-        return Http::get($this->weatherApi, [
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
+        $response = Http::get('https://api.open-meteo.com/v1/forecast', [
+            'latitude' => $latitude,
+            'longitude' => $longitude,
             'hourly' => 'temperature_2m',
             'forecast_days' => 1
         ]);
+
+        if ($response->successful()) {
+            return new WeatherResource($response->json());
+        }
+
+        throw new \Exception("Request to weather service failed: " . ($response->json()['reason'] ?? 'Something Went Wrong'));
     }
 }
