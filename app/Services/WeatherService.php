@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
+use App\Exceptions\WeatherException;
 use App\Http\Resources\WeatherResource;
+use Illuminate\Support\Facades\Http;
 
 class WeatherService
 {
@@ -13,13 +14,13 @@ class WeatherService
             'latitude' => $latitude,
             'longitude' => $longitude,
             'hourly' => 'temperature_2m',
-            'forecast_days' => 1
+            'forecast_days' => 1,
         ]);
 
-        if ($response->successful()) {
-            return new WeatherResource($response->json());
+        if ($response->failed()) {
+            throw WeatherException::invalid();
         }
 
-        throw new \Exception("Request to weather service failed: " . ($response->json()['reason'] ?? 'Something Went Wrong'));
+        return new WeatherResource($response->json());
     }
 }
