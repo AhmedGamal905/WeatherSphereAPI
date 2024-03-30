@@ -10,7 +10,7 @@ class WeatherController extends Controller
 {
     public function fetchWeatherData(Request $request, WeatherService $weatherService)
     {
-        return Cache::remember('weather-'.$request->latitude.'-'.$request->longitude, now()->addHour(), function () use ($request, $weatherService) {
+        return Cache::remember('weather-' . $request->latitude . '-' . $request->longitude, now()->addHour(), function () use ($request, $weatherService) {
             return $weatherService->fetch($request->latitude, $request->longitude);
         });
     }
