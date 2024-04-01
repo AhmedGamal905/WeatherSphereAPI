@@ -1,0 +1,222 @@
+{
+	"info": {
+		"_postman_id": "7537b097-d87d-48b2-9b1d-5f57f6acd45e",
+		"name": "WeatherApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33760532"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Ahmed",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "Test@Test.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "k0gRv6T08-~3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{uri}}/api/auth/register",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "Test@Test.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "k0gRv6T08-~3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{uri}}/api/auth/login",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "8|YUtFy0m22XQ3jzPfrRJOkMRNsMbHVOrSDY0eWvhrc1524e0d",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{uri}}/api/auth/logout",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Services",
+			"item": [
+				{
+					"name": "CurrentWeather-OpenMeteo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{uri}}/api/weather?longitude=52.50&latitude=13.375",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"api",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "longitude",
+									"value": "52.50"
+								},
+								{
+									"key": "latitude",
+									"value": "13.375"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "uri",
+			"value": "https://weather.test",
+			"type": "string"
+		}
+	]
+}
